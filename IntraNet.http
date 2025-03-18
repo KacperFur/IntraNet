@@ -1,0 +1,6 @@
+@IntraNet_HostAddress = http://localhost:5012
+
+GET {{IntraNet_HostAddress}}/api/intranet
+Accept: application/json
+
+###
