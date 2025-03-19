@@ -33,18 +33,20 @@ namespace IntraNet.Services
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
             if (employeeDto == null)
             {
-                throw new Exception("Mapping failed");
+                throw new NotFoundException("Mapping failed");
             }
             return employeeDto;
 
         }
-        public async Task<IEnumerable<EmployeeDto>> GetAll()
+        public async Task<IEnumerable<EmployeeDto>> GetAll(string searchPhrase)
         {
             //maping data from database to dto model to hide unwanted data to client
             var employees = await _context.Employees
                 .Include(e => e.TasksAssigned)
+                .Where(e=> searchPhrase == null || (e.FirstName.ToLower().Contains(searchPhrase.ToLower())|| e.LastName.ToLower().Contains(searchPhrase.ToLower())))
                 .ToListAsync();
             var employeesDtos = _mapper.Map<List<EmployeeDto>>(employees);
+
             return employeesDtos;
         }
 

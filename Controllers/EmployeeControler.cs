@@ -43,10 +43,10 @@ namespace IntraNet.Controllers
             return Created($"/api/intranet/{id}", null);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll([FromQuery] string searchPhrase)
         {
             //maping data from database to dto model to hide unwanted data to client
-            var employees = await _employeeService.GetAll();
+            var employees = await _employeeService.GetAll(searchPhrase);
             return Ok(employees);
         }
         [HttpGet("{id}")]
