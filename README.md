@@ -21,9 +21,8 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
 ---
 ---
 
-### **3. API Documentation **
+## 3. API Documentation 
 
-```md
 ## API Endpoints
 ## Employee Controller
 ###  1. Getting all employees
