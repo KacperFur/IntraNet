@@ -61,7 +61,7 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
     ]
   }
 ]
-
+```
 ###  2. Getting employee by id
 **GET** `api/intranet/employee/{id}`
 
@@ -98,11 +98,12 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
     ]
   }
 ]
-
+```
 ###  3. Creating new employee
 **POST** `api/intranet/employee/`
 
 ### Example body request :
+```json
 {
   "firstName": "string",
   "lastName": "string",
@@ -112,7 +113,7 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
   "password": "string",
   "roleId": 0
 }
-
+```
 ## TODO
 - [ ] Autoryzacja i JWT
 - [ ] Logowanie błędów (Serilog)
