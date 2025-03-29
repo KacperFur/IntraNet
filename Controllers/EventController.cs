@@ -31,11 +31,17 @@ namespace IntraNet.Controllers
             var results = await _service.GetAll();
             return Ok(results);
         }
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<EventDto>> GetById([FromRoute]int id)
         {
             var result = await _service.GetById(id);
             return Ok(result);
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEvent([FromRoute] int id)
+        {
+            await _service.DeleteEvent(id);
+            return NoContent();
         }
     }
 }

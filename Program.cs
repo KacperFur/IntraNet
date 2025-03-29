@@ -40,6 +40,7 @@ builder.Services.AddAuthentication(option =>
 builder.Services.AddDbContext<IntraNetDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<RoleSeeder>();
+builder.Services.AddScoped<EventSeeder>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -61,7 +62,9 @@ app.UseHttpsRedirection();
 using (var scope = app.Services.CreateScope())
 {
     var myService = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
-    myService.Seed();
+    await myService.SeedAsync();
+    var myService2 = scope.ServiceProvider.GetRequiredService<EventSeeder>();
+    await myService2.SeedAsync();
 }
 
 //Setting up swagger

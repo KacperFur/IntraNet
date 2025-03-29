@@ -8,5 +8,6 @@ namespace IntraNet.Services
         Task<int> CreateEvent(CreateEventDto dto);
         Task<List<EventDto>> GetAll();
         Task<EventDto> GetById(int id);
+        Task DeleteEvent(int id);
     }
 }

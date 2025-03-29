@@ -28,6 +28,15 @@ namespace IntraNet.Services
             return newEvent.Id;
         }
 
+        public async Task DeleteEvent(int id)
+        {
+            var removeEvent = await _context.Events.FirstOrDefaultAsync(e=> e.Id == id);
+            if (removeEvent is null)
+                throw new NotFoundException("Event not found");
+            _context.Events.Remove(removeEvent);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<EventDto>> GetAll()
         {
             var events = await _context.Events.ToListAsync();

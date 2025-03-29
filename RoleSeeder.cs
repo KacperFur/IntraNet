@@ -2,29 +2,11 @@
 
 namespace IntraNet
 {
-    public class RoleSeeder
+    public  class RoleSeeder : Seeder<Role>
     {
-        private readonly IntraNetDbContext _context;
-        public RoleSeeder(IntraNetDbContext context)
-        {
-            _context = context;
-        }
+        public RoleSeeder(IntraNetDbContext context) : base(context) { }
 
-        public void Seed()
-        {
-            if(_context.Database.CanConnect())
-            {
-                if (!_context.Roles.Any()) 
-                {
-                    var roles = GetRoles();
-                    _context.Roles.AddRange(roles);
-
-                    _context.SaveChanges();
-                }
-            }
-        }
-
-        private IEnumerable<Role> GetRoles()
+        public override IEnumerable<Role> GetItems()
         {
             var roles = new List<Role>()
             {
