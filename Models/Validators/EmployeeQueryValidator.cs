@@ -5,7 +5,7 @@ namespace IntraNet.Models.Validators
 {
     public class EmployeeQueryValidator : AbstractValidator<EmployeeQuery>
     {
-        private int[] allowedPageSizes = new[] { 5, 10, 15 };
+        private int[] allowedPageSizes = new[] { 10, 15, 20 };
         public EmployeeQueryValidator()
         {
             RuleFor(x=>x.PageNumber).GreaterThanOrEqualTo(1);

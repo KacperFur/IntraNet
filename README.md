@@ -22,15 +22,24 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
 ---
 
 ## 3. API Documentation 
+### Pagination
+Some endpoints (listing employees, tasks, events) support pagination via querry parameters:
+-pageNumber - default is 1
+-pageSize - possible values are 10, 15, 20
+-searchPhrase - Phrase to filter employee by first name and last name
+
+#### Example usage:
+**GET** `api/intranet/employee?pageNumber=2&pageSize=15`
 
 ## API Endpoints
 ### Employee Controller
 ###  1. Getting all employees
-**GET** `api/intranet/employee`
+**GET** `api/intranet/employee/?pageNumber=1&PageSize=10`
 
 #### Example response:
 ```json
-[
+{
+"items": [
   {
     "id": 0,
     "firstName": "string",
@@ -60,7 +69,12 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
       }
     ]
   }
-]
+],
+"totalPages": 1,
+    "firstItemNumber": 1,
+    "lastItemNumber": 10,
+    "itemsCount": 1
+}
 ```
 ###  2. Getting employee by id
 **GET** `api/intranet/employee/{id}`
