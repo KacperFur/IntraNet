@@ -5,7 +5,7 @@ namespace IntraNet.Services
 {
     public interface ITaskService
     {
-        Task<List<EmployeeTaskDto>> GetAll();
+        Task<PagedResult<EmployeeTaskDto>> GetAll(EmployeeTaskQuery query);
         Task<int> CreateTask(CreateEmployeeTaskDto dto);
         Task DeleteTask(int id);
         Task<List<EmployeeTaskDto>> GetByEmployeeId(int id);

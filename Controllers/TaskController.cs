@@ -25,9 +25,9 @@ namespace IntraNet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeTaskDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<EmployeeTaskDto>>> GetAll([FromQuery]EmployeeTaskQuery query)
         {
-            var result = await _service.GetAll();
+            var result = await _service.GetAll(query);
             return Ok(result);
         }
         [HttpGet("{id}")]

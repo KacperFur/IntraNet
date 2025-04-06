@@ -17,7 +17,7 @@ namespace IntraNet
 
         public async Task SeedAsync()
         {
-            if ((await _context.Database.CanConnectAsync()) && (!await _context.Events.AnyAsync()))
+            if ((await _context.Database.CanConnectAsync()) && (!await _dbSet.AnyAsync()))
             {
                 await _dbSet.AddRangeAsync(GetItems());
                 await _context.SaveChangesAsync();

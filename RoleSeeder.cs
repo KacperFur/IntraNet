@@ -1,10 +1,13 @@
 ﻿using IntraNet.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace IntraNet
 {
     public  class RoleSeeder : Seeder<Role>
     {
-        public RoleSeeder(IntraNetDbContext context) : base(context) { }
+        public RoleSeeder(IntraNetDbContext context) : base(context)
+        { 
+        }
 
         public override IEnumerable<Role> GetItems()
         {

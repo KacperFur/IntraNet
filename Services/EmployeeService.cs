@@ -23,6 +23,7 @@ namespace IntraNet.Services
         {
             var employee = await _context.Employees
                 .Include(e => e.TasksAssigned)
+                .Include(e => e.Events)
                 .FirstOrDefaultAsync(e => e.Id == id);
                 
                 
@@ -38,16 +39,23 @@ namespace IntraNet.Services
             return employeeDto;
 
         }
-        public async Task<IEnumerable<EmployeeDto>> GetAll(string searchPhrase)
+        public async Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query)
         {
             //maping data from database to dto model to hide unwanted data to client
             var employees = await _context.Employees
                 .Include(e => e.TasksAssigned)
-                .Where(e=> searchPhrase == null || (e.FirstName.ToLower().Contains(searchPhrase.ToLower())|| e.LastName.ToLower().Contains(searchPhrase.ToLower())))
+                .Include(e => e.Events)
+                .Where(e=> query.SearchPhrase == null || (e.FirstName.ToLower().Contains(query.SearchPhrase.ToLower())|| e.LastName.ToLower().Contains(query.SearchPhrase.ToLower())))
                 .ToListAsync();
-            var employeesDtos = _mapper.Map<List<EmployeeDto>>(employees);
 
-            return employeesDtos;
+            int totalCount = employees.Count();
+
+            var paginatedResult = employees.Skip((query.PageNumber-1)*query.PageSize).Take(query.PageSize).ToList();
+
+            var employeesDtos = _mapper.Map<List<EmployeeDto>>(paginatedResult);
+
+            var result = new PagedResult<EmployeeDto>(employeesDtos, totalCount, query.PageSize,query.PageNumber);
+            return result;
         }
 
         public async Task<int> CreateEmployee(CreateEmployeeDto employeeDto)

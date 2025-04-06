@@ -3,6 +3,7 @@ using IntraNet.Entities;
 using IntraNet.Exceptions;
 using IntraNet.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace IntraNet.Services
 {
@@ -37,11 +38,16 @@ namespace IntraNet.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<EventDto>> GetAll()
+        public async Task<PagedResult<EventDto>> GetAll(EventQuery query)
         {
-            var events = await _context.Events.ToListAsync();
-            var eventsDto = _mapper.Map<List<EventDto>>(events);
-            return eventsDto;
+            var events = await _context.Events.Where(e => query.Name == null || (e.Name.ToLower().Contains(query.Name.ToLower()))).ToListAsync();
+
+            var total = events.Count;
+            var paginatedEvents = events.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize);
+
+            var eventsDto = _mapper.Map<List<EventDto>>(paginatedEvents);
+            var result = new PagedResult<EventDto>(eventsDto, total, query.PageSize, query.PageNumber);
+            return result;
         }
 
         public async Task<EventDto> GetById(int id)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntraNet.Migrations
 {
     [DbContext(typeof(IntraNetDbContext))]
-    [Migration("20250303200517_nameChange")]
-    partial class nameChange
+    [Migration("20250404111447_eventsnullable")]
+    partial class eventsnullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,14 +50,17 @@ namespace IntraNet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
                 });
@@ -70,17 +73,13 @@ namespace IntraNet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AssignedEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AuthorId")
+                    b.Property<int?>("AssignedEmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FinishDate")
@@ -90,7 +89,6 @@ namespace IntraNet.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Tag")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -100,8 +98,6 @@ namespace IntraNet.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedEmployeeId");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Tasks");
                 });
@@ -114,14 +110,13 @@ namespace IntraNet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuthorId")
+                    b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -135,23 +130,41 @@ namespace IntraNet.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("IntraNet.Entities.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("IntraNet.Entities.Employee", b =>
+                {
+                    b.HasOne("IntraNet.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("IntraNet.Entities.EmployeeTask", b =>
                 {
                     b.HasOne("IntraNet.Entities.Employee", "AssignedEmployee")
-                        .WithMany()
+                        .WithMany("TasksAssigned")
                         .HasForeignKey("AssignedEmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IntraNet.Entities.Employee", "TaskAuthor")
-                        .WithMany("Tasks")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("AssignedEmployee");
-
-                    b.Navigation("TaskAuthor");
                 });
 
             modelBuilder.Entity("IntraNet.Entities.Event", b =>
@@ -159,8 +172,7 @@ namespace IntraNet.Migrations
                     b.HasOne("IntraNet.Entities.Employee", "EventAuthor")
                         .WithMany("Events")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("EventAuthor");
                 });
@@ -169,7 +181,7 @@ namespace IntraNet.Migrations
                 {
                     b.Navigation("Events");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("TasksAssigned");
                 });
 #pragma warning restore 612, 618
         }

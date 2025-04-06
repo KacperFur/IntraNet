@@ -15,14 +15,14 @@ namespace IntraNet
                     Name = "Christmas Eve",
                     Description = "day off",
                     Date = new DateTime(2025,12,29),
-                    AuthorId = 15
+                    AuthorId = 1
                 },
                 new Event()
                 {
                     Name = "Independence day",
                     Description = "day off",
                     Date = new DateTime(2025,11,11),
-                    AuthorId = 15
+                    AuthorId = 1
                 }
 
             };

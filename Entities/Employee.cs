@@ -15,8 +15,8 @@ namespace IntraNet.Entities
         public string Status { get; set; }
         [Required]
         public string Password { get; set; }
-        public virtual List<EmployeeTask> TasksAssigned { get; set; }
-        public virtual List<Event> Events { get; set; }
+        public virtual List<EmployeeTask>? TasksAssigned { get; set; }
+        public virtual List<Event>? Events { get; set; }
 
         public int? RoleId { get; set; }
         public virtual Role? Role { get; set; }

@@ -9,8 +9,7 @@ namespace IntraNet.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
-        [Required]
-        public int AuthorId { get; set; }
-        public virtual Employee EventAuthor { get; set; }
+        public int? AuthorId { get; set; }
+        public virtual Employee? EventAuthor { get; set; }
     }
 }

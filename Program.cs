@@ -39,8 +39,6 @@ builder.Services.AddAuthentication(option =>
 // Add DbContext with connection configuration
 builder.Services.AddDbContext<IntraNetDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<RoleSeeder>();
-builder.Services.AddScoped<EventSeeder>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -48,7 +46,12 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
+builder.Services.AddScoped<RoleSeeder>();
+builder.Services.AddScoped<EventSeeder>();
+builder.Services.AddScoped<EmployeeSeeder>();
 builder.Services.AddScoped<IValidator<CreateEmployeeDto>, CreateEmployeeDtoValidator>();
+builder.Services.AddScoped<IValidator<EmployeeQuery>, EmployeeQueryValidator>();
+builder.Services.AddScoped<IValidator<EmployeeTaskQuery>, EmployeeTaskQueryValidator>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -63,8 +66,11 @@ using (var scope = app.Services.CreateScope())
 {
     var myService = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
     await myService.SeedAsync();
+    var myService3 = scope.ServiceProvider.GetRequiredService<EmployeeSeeder>();
+    await myService3.SeedAsync();
     var myService2 = scope.ServiceProvider.GetRequiredService<EventSeeder>();
     await myService2.SeedAsync();
+    
 }
 
 //Setting up swagger

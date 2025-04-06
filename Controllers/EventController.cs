@@ -26,9 +26,9 @@ namespace IntraNet.Controllers
             return Created($"/api/event/{id}", null);
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetAll() 
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetAll([FromQuery]EventQuery query) 
         {
-            var results = await _service.GetAll();
+            var results = await _service.GetAll(query);
             return Ok(results);
         }
         [HttpGet("{id}")]

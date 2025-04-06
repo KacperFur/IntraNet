@@ -70,7 +70,7 @@ namespace IntraNet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AssignedEmployeeId")
+                    b.Property<int?>("AssignedEmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -107,7 +107,7 @@ namespace IntraNet.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuthorId")
+                    b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -159,8 +159,7 @@ namespace IntraNet.Migrations
                     b.HasOne("IntraNet.Entities.Employee", "AssignedEmployee")
                         .WithMany("TasksAssigned")
                         .HasForeignKey("AssignedEmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("AssignedEmployee");
                 });
@@ -170,8 +169,7 @@ namespace IntraNet.Migrations
                     b.HasOne("IntraNet.Entities.Employee", "EventAuthor")
                         .WithMany("Events")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("EventAuthor");
                 });

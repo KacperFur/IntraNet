@@ -5,11 +5,8 @@ namespace IntraNet.Models.Validators
 {
     public class CreateEmployeeDtoValidator : AbstractValidator<CreateEmployeeDto>
     {
-        private readonly IntraNetDbContext _dbContext;
-
         public CreateEmployeeDtoValidator(IntraNetDbContext dbContext)
         {
-            _dbContext = dbContext;
             RuleFor(e => e.Email).EmailAddress()
                 .NotEmpty();
             RuleFor(e => e.FirstName).NotEmpty();

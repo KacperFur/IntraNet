@@ -11,6 +11,7 @@ namespace IntraNet.Models
         public string Description { get; set; }
         //[Required]
         public virtual int AuthorId { get; set; }
+        public virtual int? AssignedEmployeeId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
