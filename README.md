@@ -41,6 +41,23 @@ To recive JWT tokenm you need to log in using following endpoint:
 
 **POST** `api/intranet/account/login`
 
+ Endpoint                     | Method | Requires JWT | Required Role         |
+|-----------------------------|--------|--------------|------------------------|
+| `api/intranet/employee/`    | GET    | ✅           | Admin,User, Supervisor |
+| `api/intranet/employee/`    | POST   | ✅           | Admin                  |
+| `api/intranet/employee/`    | PUT    | ✅           | Admin                  |
+| `api/intranet/employee/`    | DELETE | ✅           | Admin                  |
+| `api/intranet/event/`       | GET    | ✅           | Admin,User, Supervisor |
+| `api/intranet/event/`       | POST   | ✅           | Admin, Supervisor      |
+| `api/intranet/event/`       | PUT    | ✅           | Admin                  |
+| `api/intranet/event/`       | DELETE | ✅           | Admin                  |
+| `api/intranet/task/`        | GET    | ✅           | Admin,User, Supervisor |
+| `api/intranet/task/`        | POST   | ✅           | Admin, Supervisor      |
+| `api/intranet/task/`        | PUT    | ✅           | Admin, Supervisor      |
+| `api/intranet/task/`        | DELETE | ✅           | Admin, Supervisor      |
+| `api/intranet/account/login`| POST   | ❌           | -                      |
+
+
 #### Example body request :
 ```json
 {
