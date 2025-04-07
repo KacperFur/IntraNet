@@ -17,29 +17,53 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
 - `IntraNet/Services` - Business logic 
 
 ## How to run API locally?
+### 1. Make sure you have the following installed:
+- .NET 6+ SDK
+- SQL Server
+### 2. Configure your connection string in appsettings.json
+### 3. Run migrations and update the database:
 
----
----
+### 4.Launch API
 
 ## 3. API Documentation 
-### Pagination and search
-Some endpoints (listing employees, tasks, events) support pagination via querry parameters:
--`pageNumber` - default is 1
--`pageSize` - possible values are 10, 15, 20
-
+### Pagination
+Some endpoints (listing employees, tasks, events) support pagination via query parameters:
+- `pageNumber` - default is 1
+- `pageSize` - possible values are 10, 15, 20
+### Search
 These endpoints support also searching results via following query parameters: 
--`searchPhrase` -  filters employee by first name and last name
--`Name` - filters events by name
--`Tag` - filters tasks by tag
+- `searchPhrase` -  filters employee by first name and last name
+- `Name` - filters events by name
+- `Tag` - filters tasks by tag
 
 #### Example usage:
 **GET** `api/intranet/employee?pageNumber=2&pageSize=15?searchPhrase=Peter`
 
 ### Authentication and Authorization
 Application uses JWT for authenticating users and protecting resources.
-To recive JWT tokenm you need to log in using following endpoint:
+To receive JWT tokenm you need to log in using following endpoint:
 
 **POST** `api/intranet/account/login`
+
+
+#### Example body request :
+```json
+{
+  "email": "admin@mail.com",
+  "password": "adminadmin"
+}
+```
+This particular request allows you to log in as administrator and use all of functions of this application.
+
+#### Using the JWT token in requests
+The token must be included in the Authorization header of every secured request, in the following format:
+Authorization: Bearer {token}
+#### Example :
+```css
+GET /api/intranet/employee
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
+```
+### Protected endpoints
 
  Endpoint                     | Method | Requires JWT | Required Role         |
 |-----------------------------|--------|--------------|------------------------|
@@ -56,25 +80,6 @@ To recive JWT tokenm you need to log in using following endpoint:
 | `api/intranet/task/`        | PUT    | ✅           | Admin, Supervisor      |
 | `api/intranet/task/`        | DELETE | ✅           | Admin, Supervisor      |
 | `api/intranet/account/login`| POST   | ❌           | -                      |
-
-
-#### Example body request :
-```json
-{
-  "email": "admin@mail.com",
-  "password": "adminadmin"
-}
-```
-This paricular request allows you to log in as administrator and use all of functions of this application.
-
-#### Using the JWT token in requests
-The token must be included in the Authorization header of every secured request, in the following format:
-Authorization: Bearer {token}
-#### Example :
-```css
-GET /api/intranet/employee
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
-```
 
 ## API Endpoints
 ### Account Controller
@@ -188,7 +193,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
 ###  4. Deleting employee
 **DELETE** `api/intranet/employee/{id}`
 
-### 5. Updating employee informartion
+### 5. Updating employee information
 **PUT** `api/intranet/employee/{id}`
 
 #### Example body request :
