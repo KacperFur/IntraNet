@@ -18,7 +18,7 @@ IntraNet is an application created in ASP.NET Core designed to handle the basic 
 
 ## How to run API locally?
 ### 1. Make sure you have the following installed:
-- .NET 6+ SDK
+- .NET 8 SDK
 - SQL Server
 ### 2. Configure your connection string in appsettings.json
 ### 3. Run migrations and update the database:
