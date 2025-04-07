@@ -21,7 +21,6 @@ namespace IntraNet
             {
                 await _dbSet.AddRangeAsync(GetItems());
                 await _context.SaveChangesAsync();
-
             }
         }
         public abstract IEnumerable<T> GetItems();
