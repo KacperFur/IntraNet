@@ -369,6 +369,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
 ```
 
 ## TODO
-- [ ] Autoryzacja i JWT
-- [ ] Logowanie błędów (Serilog)
-- [ ] Dockerfile i konfiguracja CI/CD
+- [ ] SignalR communication
+- [ ] Logger
