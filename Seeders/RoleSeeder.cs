@@ -1,4 +1,5 @@
 ﻿using IntraNet.Entities;
+using IntraNet.Seeders;
 using Microsoft.AspNetCore.Identity;
 
 namespace IntraNet

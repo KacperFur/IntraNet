@@ -25,18 +25,21 @@ namespace IntraNet.Controllers
             int id = await _service.CreateEvent(dto);
             return Created($"/api/event/{id}", null);
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetAll([FromQuery]EventQuery query) 
         {
             var results = await _service.GetAll(query);
             return Ok(results);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<EventDto>> GetById([FromRoute]int id)
         {
             var result = await _service.GetById(id);
             return Ok(result);
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEvent([FromRoute] int id)
         {

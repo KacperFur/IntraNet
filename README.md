@@ -3,22 +3,25 @@
 IntraNet is an application created in ASP.NET Core designed to handle the basic needs of a company. It allows for the management of employees, their tasks, and events taking place within the organization. 
 
 ## Technologies
-- ASP.NET Core 8
+- ASP.NET Core 9
 - Entity Framework Core
 - MS Sql Server
 - Swagger UI
 
 ## Project Structure
 - `IntraNet/Controllers` - API controllers
-- `IntraNet/Entities` - Database configuration
+- `IntraNet/Entities` - Entities
+- `IntraNet/EntitiesConfigurations` - Database configuration
 - `IntraNet/Exceptions` - Custom exceptions
+- `IntraNet/Extensions` - Class extensions 
 - `IntraNet/Middleware` - Exception handling
 - `IntraNet/Models` - DTO's
+- `IntraNet/Seeders` - Seeding default data to database
 - `IntraNet/Services` - Business logic 
 
 ## How to run API locally?
 ### 1. Make sure you have the following installed:
-- .NET 8 SDK
+- .NET 9 SDK
 - SQL Server
 ### 2. Configure your connection string in appsettings.json
 ### 3. Run migrations and update the database:

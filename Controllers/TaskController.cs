@@ -16,6 +16,7 @@ namespace IntraNet.Controllers
         {
             _service = service;
         }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Supervisor")]
         public async Task<ActionResult> Delete([FromRoute]int id)
@@ -30,12 +31,14 @@ namespace IntraNet.Controllers
             var result = await _service.GetAll(query);
             return Ok(result);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeTaskDto>> GetByEmployeeId([FromRoute]int id)
         {
             var result = await _service.GetByEmployeeId(id);
             return Ok(result);
         }
+
         [HttpPost]
         [Authorize(Roles = "Admin,Supervisor")]
         public async Task<ActionResult> CreateTask([FromBody]CreateEmployeeTaskDto dto) 
@@ -43,6 +46,7 @@ namespace IntraNet.Controllers
             int id = await _service.CreateTask(dto);
             return Created($"/api/task/{id}", null);
         }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Supervisor")]
         public async Task<ActionResult> UpdateTask([FromRoute]int id, [FromBody] UpdateEmployeeTaskDto dto)

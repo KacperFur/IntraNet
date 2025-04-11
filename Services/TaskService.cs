@@ -42,7 +42,7 @@ namespace IntraNet.Services
 
         public async Task<PagedResult<EmployeeTaskDto>> GetAll(EmployeeTaskQuery query )
         {
-            var tasks = await _context.Tasks.ToListAsync();
+            var tasks = await _context.Tasks.AsNoTracking().ToListAsync();
             var totalCount = tasks.Count;
             
             
@@ -54,7 +54,7 @@ namespace IntraNet.Services
 
         public async Task<List<EmployeeTaskDto>> GetByEmployeeId(int id)
         {
-            var tasks = await _context.Tasks.Where(t => t.AssignedEmployeeId == id).ToListAsync();
+            var tasks = await _context.Tasks.AsNoTracking().Where(t => t.AssignedEmployeeId == id).ToListAsync();
             if (tasks is null)
             {
                 throw new NotFoundException("No tasks found");

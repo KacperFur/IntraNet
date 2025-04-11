@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace IntraNet
+namespace IntraNet.Seeders
 {
     public abstract class Seeder<T> where T : class // T must be a class
     {
@@ -17,7 +17,7 @@ namespace IntraNet
 
         public async Task SeedAsync()
         {
-            if ((await _context.Database.CanConnectAsync()) && (!await _dbSet.AnyAsync()))
+            if (await _context.Database.CanConnectAsync() && !await _dbSet.AnyAsync())
             {
                 await _dbSet.AddRangeAsync(GetItems());
                 await _context.SaveChangesAsync();

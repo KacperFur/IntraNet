@@ -42,13 +42,14 @@ namespace IntraNet.Controllers
             int id = await _employeeService.CreateEmployee(dto);
             return Created($"/api/intranet/{id}", null);
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll([FromQuery] EmployeeQuery query)
         {
-            //maping data from database to dto model to hide unwanted data to client
             var employees = await _employeeService.GetAll(query);
             return Ok(employees);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetById([FromRoute]int id)
         {

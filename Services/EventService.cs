@@ -40,7 +40,7 @@ namespace IntraNet.Services
 
         public async Task<PagedResult<EventDto>> GetAll(EventQuery query)
         {
-            var events = await _context.Events.Where(e => query.Name == null || (e.Name.ToLower().Contains(query.Name.ToLower()))).ToListAsync();
+            var events = await _context.Events.AsNoTracking().Where(e => query.Name == null || (e.Name.ToLower().Contains(query.Name.ToLower()))).ToListAsync();
 
             var total = events.Count;
             var paginatedEvents = events.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize);
@@ -52,7 +52,7 @@ namespace IntraNet.Services
 
         public async Task<EventDto> GetById(int id)
         {
-            var result = await _context.Events.FirstOrDefaultAsync(e=>e.Id == id);
+            var result = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e=>e.Id == id);
             if (result == null)
                 throw new NotFoundException("Event not found");
             return _mapper.Map<EventDto>(result);
