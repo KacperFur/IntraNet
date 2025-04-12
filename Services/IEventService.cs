@@ -5,9 +5,9 @@ namespace IntraNet.Services
 {
     public interface IEventService
     {
-        Task<int> CreateEvent(CreateEventDto dto);
-        Task<PagedResult<EventDto>> GetAll(EventQuery query);
-        Task<EventDto> GetById(int id);
-        Task DeleteEvent(int id);
+        Task<int> CreateEvent(CreateEventDto dto, CancellationToken cancellationToken);
+        Task<PagedResult<EventDto>> GetAll(EventQuery query, CancellationToken cancellationToken);
+        Task<EventDto> GetById(int id, CancellationToken cancellationToken);
+        Task DeleteEvent(int id, CancellationToken cancellationToken);
     }
 }

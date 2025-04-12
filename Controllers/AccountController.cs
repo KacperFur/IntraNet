@@ -17,9 +17,9 @@ namespace IntraNet.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody]LoginDto dto)
+        public async Task<ActionResult> Login([FromBody]LoginDto dto, CancellationToken cancellationToken)
         {
-            string token = await _service.GenerateJwt(dto);
+            string token = await _service.GenerateJwt(dto, cancellationToken);
             return Ok(token);
         }
     }

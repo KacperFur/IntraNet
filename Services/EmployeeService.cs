@@ -4,6 +4,7 @@ using IntraNet.Exceptions;
 using IntraNet.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace IntraNet.Services
 {
@@ -19,13 +20,13 @@ namespace IntraNet.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<EmployeeDto> GetById(int id)
+        public async Task<EmployeeDto> GetById(int id, CancellationToken cancellationToken)
         {
             var employee = await _context.Employees
                 .AsNoTracking()
                 .Include(e => e.TasksAssigned)
                 .Include(e => e.Events)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
                 
                 
 
@@ -40,7 +41,7 @@ namespace IntraNet.Services
             return employeeDto;
 
         }
-        public async Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query)
+        public async Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query, CancellationToken cancellationToken)
         {
             //maping data from database to dto model to hide unwanted data to client
             var employees = await _context.Employees
@@ -48,7 +49,7 @@ namespace IntraNet.Services
                 .Include(e => e.Events)
                 .AsNoTracking()
                 .Where(e=> query.SearchPhrase == null || (e.FirstName.ToLower().Contains(query.SearchPhrase.ToLower())|| e.LastName.ToLower().Contains(query.SearchPhrase.ToLower())))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             int totalCount = employees.Count();
 
@@ -60,7 +61,7 @@ namespace IntraNet.Services
             return result;
         }
 
-        public async Task<int> CreateEmployee(CreateEmployeeDto employeeDto)
+        public async Task<int> CreateEmployee(CreateEmployeeDto employeeDto, CancellationToken cancellationToken)
         {
             
             var newEmployee = _mapper.Map<Employee>(employeeDto);
@@ -68,29 +69,29 @@ namespace IntraNet.Services
             var hashedPassword =_passwordHasher.HashPassword(newEmployee, employeeDto.Password);
             newEmployee.Password = hashedPassword;
 
-            await _context.Employees.AddAsync(newEmployee);
-            await _context.SaveChangesAsync();
+            await _context.Employees.AddAsync(newEmployee, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return newEmployee.Id;
         }
 
-        public async Task DeleteEmployeeById(int id)
+        public async Task DeleteEmployeeById(int id, CancellationToken cancellationToken)
         {
-            var Employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
-            if (Employee is null)
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            if (employee is null)
                 throw new NotFoundException("Employee not found");
-            _context.Employees.Remove(Employee);
-            await _context.SaveChangesAsync();
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateEmployee(int id, UpdateEmployeeDto dto)
+        public async Task UpdateEmployee(int id, UpdateEmployeeDto dto, CancellationToken cancellationToken)
         {
-            var Employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
-            if (Employee is null) 
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            if (employee is null) 
                 throw new NotFoundException("Employee not found");
-            Employee.Email = dto.Email;
-            Employee.Position = dto.Position;
-            Employee.Status = dto.Status;
-            await _context.SaveChangesAsync();
+            employee.Email = dto.Email;
+            employee.Position = dto.Position;
+            employee.Status = dto.Status;
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

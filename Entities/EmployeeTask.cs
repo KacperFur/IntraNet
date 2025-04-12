@@ -13,7 +13,7 @@ namespace IntraNet.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
-        public virtual int? AssignedEmployeeId { get; set; }
-        public virtual Employee? AssignedEmployee { get; set; }
+        public int? AssignedEmployeeId { get; set; }
+        public Employee? AssignedEmployee { get; set; }
     }
 }

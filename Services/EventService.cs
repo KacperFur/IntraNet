@@ -17,30 +17,30 @@ namespace IntraNet.Services
             _context = context;
         }
 
-        public async Task<int> CreateEvent(CreateEventDto dto)
+        public async Task<int> CreateEvent(CreateEventDto dto, CancellationToken cancellationToken)
         {
             var newEvent = _mapper.Map<Event>(dto);
             if(newEvent is null)
             {
                 throw new NotFoundException("dto not found");
             }
-            await _context.Events.AddAsync(newEvent);
-            await _context.SaveChangesAsync();
+            await _context.Events.AddAsync(newEvent, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return newEvent.Id;
         }
 
-        public async Task DeleteEvent(int id)
+        public async Task DeleteEvent(int id, CancellationToken cancellationToken)
         {
-            var removeEvent = await _context.Events.FirstOrDefaultAsync(e=> e.Id == id);
+            var removeEvent = await _context.Events.FirstOrDefaultAsync(e=> e.Id == id, cancellationToken);
             if (removeEvent is null)
                 throw new NotFoundException("Event not found");
             _context.Events.Remove(removeEvent);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<PagedResult<EventDto>> GetAll(EventQuery query)
+        public async Task<PagedResult<EventDto>> GetAll(EventQuery query, CancellationToken cancellationToken)
         {
-            var events = await _context.Events.AsNoTracking().Where(e => query.Name == null || (e.Name.ToLower().Contains(query.Name.ToLower()))).ToListAsync();
+            var events = await _context.Events.AsNoTracking().Where(e => query.Name == null || (e.Name.ToLower().Contains(query.Name.ToLower()))).ToListAsync(cancellationToken);
 
             var total = events.Count;
             var paginatedEvents = events.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize);
@@ -50,9 +50,9 @@ namespace IntraNet.Services
             return result;
         }
 
-        public async Task<EventDto> GetById(int id)
+        public async Task<EventDto> GetById(int id, CancellationToken cancellationToken)
         {
-            var result = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e=>e.Id == id);
+            var result = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e=>e.Id == id, cancellationToken);
             if (result == null)
                 throw new NotFoundException("Event not found");
             return _mapper.Map<EventDto>(result);

@@ -10,6 +10,6 @@ namespace IntraNet.Entities
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public int? AuthorId { get; set; }
-        public virtual Employee? EventAuthor { get; set; }
+        public Employee? EventAuthor { get; set; }
     }
 }

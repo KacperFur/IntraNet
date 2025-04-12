@@ -4,10 +4,10 @@ namespace IntraNet.Services
 {
     public interface IEmployeeService
     {
-        Task<int> CreateEmployee(CreateEmployeeDto employeeDto);
-        Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query);
-        Task<EmployeeDto> GetById(int id);
-        Task DeleteEmployeeById(int id);
-        Task UpdateEmployee(int id, UpdateEmployeeDto dto);
+        Task<int> CreateEmployee(CreateEmployeeDto employeeDto, CancellationToken cancellationToken);
+        Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query, CancellationToken cancellationToken);
+        Task<EmployeeDto> GetById(int id, CancellationToken cancellationToken);
+        Task DeleteEmployeeById(int id, CancellationToken cancellationToken);
+        Task UpdateEmployee(int id, UpdateEmployeeDto dto, CancellationToken cancellationToken);
     }
 }

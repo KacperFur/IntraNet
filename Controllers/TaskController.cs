@@ -19,39 +19,39 @@ namespace IntraNet.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Supervisor")]
-        public async Task<ActionResult> Delete([FromRoute]int id)
+        public async Task<ActionResult> Delete([FromRoute]int id, CancellationToken cancellationToken)
         { 
-            await _service.DeleteTask(id);
+            await _service.DeleteTask(id, cancellationToken);
             return NoContent();
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeTaskDto>>> GetAll([FromQuery]EmployeeTaskQuery query)
+        public async Task<ActionResult<IEnumerable<EmployeeTaskDto>>> GetAll([FromQuery]EmployeeTaskQuery query, CancellationToken cancellationToken)
         {
-            var result = await _service.GetAll(query);
+            var result = await _service.GetAll(query, cancellationToken);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeTaskDto>> GetByEmployeeId([FromRoute]int id)
+        public async Task<ActionResult<EmployeeTaskDto>> GetByEmployeeId([FromRoute]int id, CancellationToken cancellationToken)
         {
-            var result = await _service.GetByEmployeeId(id);
+            var result = await _service.GetByEmployeeId(id, cancellationToken);
             return Ok(result);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,Supervisor")]
-        public async Task<ActionResult> CreateTask([FromBody]CreateEmployeeTaskDto dto) 
+        public async Task<ActionResult> CreateTask([FromBody]CreateEmployeeTaskDto dto, CancellationToken cancellationToken) 
         {
-            int id = await _service.CreateTask(dto);
+            int id = await _service.CreateTask(dto, cancellationToken);
             return Created($"/api/task/{id}", null);
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Supervisor")]
-        public async Task<ActionResult> UpdateTask([FromRoute]int id, [FromBody] UpdateEmployeeTaskDto dto)
+        public async Task<ActionResult> UpdateTask([FromRoute]int id, [FromBody] UpdateEmployeeTaskDto dto, CancellationToken cancellationToken)
         {
-            await _service.UpdateTask(dto, id);
+            await _service.UpdateTask(dto, id, cancellationToken);
             return Ok();
         }
     }

@@ -22,11 +22,11 @@ namespace IntraNet.Services
             _context = context;
             _passwordHasher = passwordHasher;
         }
-        public async Task<string> GenerateJwt(LoginDto dto)
+        public async Task<string> GenerateJwt(LoginDto dto, CancellationToken cancellationToken)
         {
-            var user = await _context.Employees
+            var user = await _context.Employees.AsNoTracking()
                 .Include(e=> e.Role)
-                .FirstOrDefaultAsync(e=> e.Email == dto.Email);
+                .FirstOrDefaultAsync(e=> e.Email == dto.Email, cancellationToken);
             if(user is null)
             {
                 throw new BadRequestException("Invalid email address or password");
