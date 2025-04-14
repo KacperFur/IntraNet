@@ -2,6 +2,7 @@
 using AutoMapper;
 using IntraNet.Entities;
 using IntraNet.Exceptions;
+using IntraNet.Extensions;
 using IntraNet.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks.Sources;
@@ -42,11 +43,10 @@ namespace IntraNet.Services
 
         public async Task<PagedResult<EmployeeTaskDto>> GetAll(EmployeeTaskQuery query, CancellationToken cancellationToken)
         {
-            var tasks = await _context.Tasks.AsNoTracking().ToListAsync(cancellationToken);
-            var totalCount = tasks.Count;
-            
-            
-            var paginatedTask = tasks.Where(e=>query.Tag==null || e.Tag.Contains(query.Tag)).Skip((query.PageNumber-1)*query.PageSize).Take(query.PageSize);
+            var tasks =_context.Tasks.AsNoTracking();
+            var paginatedTask = await tasks.Paginate(query.PageNumber, query.PageSize).ToListAsync(cancellationToken);
+            var totalCount = await tasks.CountAsync(cancellationToken);
+        
             var taskDtos = _mapper.Map<List<EmployeeTaskDto>>(paginatedTask);
             var results = new PagedResult<EmployeeTaskDto>(taskDtos,totalCount,query.PageSize,query.PageNumber);
             return results;

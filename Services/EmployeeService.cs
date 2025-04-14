@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IntraNet.Entities;
 using IntraNet.Exceptions;
+using IntraNet.Extensions;
 using IntraNet.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,17 +44,18 @@ namespace IntraNet.Services
         }
         public async Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query, CancellationToken cancellationToken)
         {
-            //maping data from database to dto model to hide unwanted data to client
-            var employees = await _context.Employees
+            var employees = _context.Employees
                 .Include(e => e.TasksAssigned)
                 .Include(e => e.Events)
                 .AsNoTracking()
-                .Where(e=> query.SearchPhrase == null || (e.FirstName.ToLower().Contains(query.SearchPhrase.ToLower())|| e.LastName.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Where(e => query.SearchPhrase == null || (e.FirstName.ToLower().Contains(query.SearchPhrase.ToLower()) || e.LastName.ToLower().Contains(query.SearchPhrase.ToLower())));
+
+
+            var paginatedResult = await employees
+                .Paginate(query.PageNumber,query.PageSize)
                 .ToListAsync(cancellationToken);
 
-            int totalCount = employees.Count();
-
-            var paginatedResult = employees.Skip((query.PageNumber-1)*query.PageSize).Take(query.PageSize).ToList();
+            int totalCount = await employees.CountAsync();
 
             var employeesDtos = _mapper.Map<List<EmployeeDto>>(paginatedResult);
 
