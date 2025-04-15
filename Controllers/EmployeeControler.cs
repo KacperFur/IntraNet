@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using IntraNet.Entities;
+﻿using IntraNet.Entities;
 using IntraNet.Models;
 using IntraNet.Services;
 using Microsoft.AspNetCore.Authorization;

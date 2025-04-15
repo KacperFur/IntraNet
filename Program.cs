@@ -8,6 +8,7 @@ using IntraNet.Models;
 using IntraNet.Models.Validators;
 using IntraNet.Seeders;
 using IntraNet.Services;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +22,7 @@ builder.Services.AddControllers();
 // Add DbContext with connection configuration
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddMapster();
 builder.Services.AddApplicationServices();
 builder.Services.AddMiddleware();
 builder.Services.AddHasher();

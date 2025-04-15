@@ -1,27 +1,31 @@
-﻿using AutoMapper;
-using IntraNet.Entities;
+﻿using IntraNet.Entities;
 using IntraNet.Models;
+using Mapster;
 
 namespace IntraNet
 {
-    public class IntranetMappingProfile : Profile
+
+    public static class MapsterConfiguration
     {
-        public IntranetMappingProfile()
+        public static void ConfigureMappings()
         {
-            CreateMap<Employee, EmployeeDto>()
-                .ForMember(d=>d.TasksAssigned, o => o.MapFrom(s=>s.TasksAssigned));
+            TypeAdapterConfig<Employee, EmployeeDto>
+                .NewConfig()
+                .Map(dest => dest.TasksAssigned, src => src.TasksAssigned);
 
-            CreateMap<UpdateEmployeeTaskDto, EmployeeTask>()
-                .ForMember(d => d.AssignedEmployeeId, e => e.MapFrom(f => f.AssignedEmployeeId));
+            TypeAdapterConfig<UpdateEmployeeTaskDto, EmployeeTask>
+                .NewConfig()
+                .Map(dest => dest.AssignedEmployeeId, src => src.AssignedEmployeeId);
 
-            CreateMap<EmployeeTask, EmployeeTaskDto>();
+            TypeAdapterConfig<EmployeeTask, EmployeeTaskDto>.NewConfig();
 
-            CreateMap<CreateEmployeeDto, Employee>();
+            TypeAdapterConfig<CreateEmployeeDto, Employee>.NewConfig();
 
-            CreateMap<CreateEmployeeTaskDto, EmployeeTask>();
+            TypeAdapterConfig<CreateEmployeeTaskDto, EmployeeTask>.NewConfig();
 
-            CreateMap<Event, EventDto>();
-            CreateMap<CreateEventDto, Event>();
+            TypeAdapterConfig<Event, EventDto>.NewConfig();
+
+            TypeAdapterConfig<CreateEventDto, Event>.NewConfig();
         }
     }
 }

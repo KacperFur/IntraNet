@@ -1,9 +1,8 @@
-﻿
-using AutoMapper;
-using IntraNet.Entities;
+﻿using IntraNet.Entities;
 using IntraNet.Exceptions;
 using IntraNet.Extensions;
 using IntraNet.Models;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks.Sources;
 
@@ -11,18 +10,21 @@ namespace IntraNet.Services
 {
     public class TaskService : ITaskService
     {
-        private readonly IMapper _mapper;
         private readonly IntraNetDbContext _context;
 
-        public TaskService(IntraNetDbContext context, IMapper mapper)
+        public TaskService(IntraNetDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<int> CreateTask(CreateEmployeeTaskDto dto, CancellationToken cancellationToken)
         {
-            var employeeTask = _mapper.Map<EmployeeTask>(dto);
+            var EmployeeAssigned = await _context.Employees.FirstOrDefaultAsync(e => e.Id == dto.AssignedEmployeeId, cancellationToken);
+            if (EmployeeAssigned == null)
+            {
+                throw new NotFoundException("Employee not found");
+            }
+            var employeeTask = dto.Adapt<EmployeeTask>();
 
             await _context.Tasks.AddAsync(employeeTask, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
@@ -47,7 +49,7 @@ namespace IntraNet.Services
             var paginatedTask = await tasks.Paginate(query.PageNumber, query.PageSize).ToListAsync(cancellationToken);
             var totalCount = await tasks.CountAsync(cancellationToken);
         
-            var taskDtos = _mapper.Map<List<EmployeeTaskDto>>(paginatedTask);
+            var taskDtos = paginatedTask.Adapt<List<EmployeeTaskDto>>();
             var results = new PagedResult<EmployeeTaskDto>(taskDtos,totalCount,query.PageSize,query.PageNumber);
             return results;
         }
@@ -59,7 +61,7 @@ namespace IntraNet.Services
             {
                 throw new NotFoundException("No tasks found");
             }
-            var results = _mapper.Map<List<EmployeeTaskDto>>(tasks);
+            var results = tasks.Adapt<List<EmployeeTaskDto>>();
             return results;
         }
 

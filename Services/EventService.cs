@@ -1,27 +1,25 @@
-﻿using AutoMapper;
-using IntraNet.Entities;
+﻿using IntraNet.Entities;
 using IntraNet.Exceptions;
 using IntraNet.Extensions;
 using IntraNet.Models;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace IntraNet.Services
 {
     public class EventService : IEventService
-    {
-        private readonly IMapper _mapper;
+    { 
         private readonly IntraNetDbContext _context;
-        public EventService(IntraNetDbContext context, IMapper mapper)
+        public EventService(IntraNetDbContext context)
         {
-            _mapper = mapper;
             _context = context;
         }
 
         public async Task<int> CreateEvent(CreateEventDto dto, CancellationToken cancellationToken)
         {
-            var newEvent = _mapper.Map<Event>(dto);
-            if(newEvent is null)
+            var newEvent = dto.Adapt<Event>();
+            if (newEvent is null)
             {
                 throw new NotFoundException("dto not found");
             }
@@ -48,7 +46,7 @@ namespace IntraNet.Services
             var total = await events.CountAsync();
             
 
-            var eventsDto = _mapper.Map<List<EventDto>>(paginatedEvents);
+            var eventsDto = paginatedEvents.Adapt<List<EventDto>>();
             var result = new PagedResult<EventDto>(eventsDto, total, query.PageSize, query.PageNumber);
             return result;
         }
@@ -56,9 +54,9 @@ namespace IntraNet.Services
         public async Task<EventDto> GetById(int id, CancellationToken cancellationToken)
         {
             var result = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e=>e.Id == id, cancellationToken);
-            if (result == null)
+            if (result is null)
                 throw new NotFoundException("Event not found");
-            return _mapper.Map<EventDto>(result);
+            return result.Adapt<EventDto>();
         }
     }
 }

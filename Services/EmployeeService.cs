@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using IntraNet.Entities;
+﻿using IntraNet.Entities;
 using IntraNet.Exceptions;
 using IntraNet.Extensions;
 using IntraNet.Models;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -11,13 +11,11 @@ namespace IntraNet.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IMapper _mapper;
         private readonly IPasswordHasher<Employee> _passwordHasher;
         private readonly IntraNetDbContext _context;
-        public EmployeeService(IntraNetDbContext context, IMapper mapper, IPasswordHasher<Employee> passwordHasher)
+        public EmployeeService(IntraNetDbContext context, IPasswordHasher<Employee> passwordHasher)
         {
             _context = context;
-            _mapper = mapper;
             _passwordHasher = passwordHasher;
         }
 
@@ -28,20 +26,18 @@ namespace IntraNet.Services
                 .Include(e => e.TasksAssigned)
                 .Include(e => e.Events)
                 .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
-                
-                
 
             if (employee is null)
                 throw new NotFoundException("Employee not found"); 
 
-            var employeeDto = _mapper.Map<EmployeeDto>(employee);
-            if (employeeDto == null)
+            var employeeDto = employee.Adapt<EmployeeDto>();
+            if (employeeDto is null)
             {
                 throw new NotFoundException("Mapping failed");
             }
             return employeeDto;
-
         }
+
         public async Task<PagedResult<EmployeeDto>> GetAll(EmployeeQuery query, CancellationToken cancellationToken)
         {
             var employees = _context.Employees
@@ -57,7 +53,7 @@ namespace IntraNet.Services
 
             int totalCount = await employees.CountAsync();
 
-            var employeesDtos = _mapper.Map<List<EmployeeDto>>(paginatedResult);
+            var employeesDtos = paginatedResult.Adapt<List<EmployeeDto>>();
 
             var result = new PagedResult<EmployeeDto>(employeesDtos, totalCount, query.PageSize,query.PageNumber);
             return result;
@@ -66,7 +62,7 @@ namespace IntraNet.Services
         public async Task<int> CreateEmployee(CreateEmployeeDto employeeDto, CancellationToken cancellationToken)
         {
             
-            var newEmployee = _mapper.Map<Employee>(employeeDto);
+            var newEmployee = employeeDto.Adapt<Employee>();
             
             var hashedPassword =_passwordHasher.HashPassword(newEmployee, employeeDto.Password);
             newEmployee.Password = hashedPassword;
